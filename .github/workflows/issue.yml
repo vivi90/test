@@ -8,13 +8,6 @@ on:
   issues:
     types: [opened]
 
-# Sets environment variables
-env:
-  ISSUE_ID: $(jq -r '.issue.id' < "$GITHUB_EVENT_PATH")
-  ISSUE_TITLE: $(jq -r '.issue.title' < "$GITHUB_EVENT_PATH")
-  PROJECT_BOARD_ISSUE_COLUMN_ID: 12890490 #${{ secrets.PROJECT_BOARD_ISSUE_COLUMN_ID }}
-  API_AUTH_TOKEN_GITHUB: ${{ secrets.API_AUTH_TOKEN_GITHUB }}
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # Project board
@@ -22,10 +15,15 @@ jobs:
     name: Assign issue to project board
     runs-on: ubuntu-latest
     steps:
+      # Collect issue properties
+      - name: Collect issue properties
+        run: |
+          echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+          echo "ISSUE_TITLE=$(jq -r '.issue.title' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
       # Assign issue
       - name: Assign issue
         run: |
-          echo $ISSUE_ID
-          echo $ISSUE_TITLE
-          cat $GITHUB_EVENT_PATH
-          #curl --retry 3 --retry-delay 5 -u "$GITHUB_ACTOR:$API_AUTH_TOKEN_GITHUB" -H "Accept: application/vnd.github.inertia-preview+json" -X POST "$GITHUB_API_URL/projects/columns/$PROJECT_BOARD_ISSUE_COLUMN_ID/cards" -d "{\"content_type\": \"Issue\", \"content_id\": 806890418}"
+          echo "${{env.ISSUE_ID}}"
+          echo "${{env.ISSUE_TITLE}}"
+          echo "${{secrets.PROJECT_BOARD_ISSUE_COLUMN_ID}}"
+          curl --retry 3 --retry-delay 5 -u "$GITHUB_ACTOR:${{secrets.API_AUTH_TOKEN_GITHUB}}" -H "Accept: application/vnd.github.inertia-preview+json" -X POST "$GITHUB_API_URL/projects/columns/$PROJECT_BOARD_ISSUE_COLUMN_ID/cards" -d "{\"content_type\": \"Issue\", \"content_id\": ${{env.ISSUE_ID}}}"
