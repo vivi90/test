@@ -1,0 +1,29 @@
+# GitHub Actions issue creation workflow
+
+name: New issue
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on issue creation events
+  issues:
+    types: [opened]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets environment variables
+env:
+  PROJECT_BOARD_URL: https://github.com/vivi90/test/projects/1
+  PROJECT_BOARD_COLUMN_TODO: To do :-)
+  API_AUTH_TOKEN_GITHUB: ${{ secrets.API_AUTH_TOKEN_GITHUB }}
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # Project board
+  assign_project:
+    name: Assign issue to project board
+    runs-on: ubuntu-latest
+    steps:
+      # Assign issue
+      - name: Assign issue
+        run: curl -u "$GITHUB_ACTOR:$API_AUTH_TOKEN_GITHUB" "$GITHUB_API_URL/user"
