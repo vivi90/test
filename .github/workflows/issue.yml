@@ -8,13 +8,11 @@ on:
   issues:
     types: [opened]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
 # Sets environment variables
 env:
-  PROJECT_BOARD_URL: https://github.com/vivi90/test/projects/1
-  PROJECT_BOARD_COLUMN_TODO: To do :-)
+  ISSUE_ID: $(jq -r '.issue.id' < "$GITHUB_EVENT_PATH")
+  ISSUE_TITLE: $(jq -r '.issue.title' < "$GITHUB_EVENT_PATH")
+  PROJECT_BOARD_ISSUE_COLUMN_ID: ${{ secrets.PROJECT_BOARD_ISSUE_COLUMN_ID }}
   API_AUTH_TOKEN_GITHUB: ${{ secrets.API_AUTH_TOKEN_GITHUB }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -26,4 +24,9 @@ jobs:
     steps:
       # Assign issue
       - name: Assign issue
-        run: curl -u "$GITHUB_ACTOR:$API_AUTH_TOKEN_GITHUB" "$GITHUB_API_URL/user"
+        run: curl \
+               -s --retry 3 --retry-delay 5 \
+               -u "$GITHUB_ACTOR:$API_AUTH_TOKEN_GITHUB" \
+               -H "Accept: application/vnd.github.inertia-preview+json" \
+               -X POST "$GITHUB_API_URL/projects/columns/$PROJECT_BOARD_ISSUE_COLUMN_ID/cards" \
+               -d "{content_type: Issue, content_id: $ISSUE_ID}"
