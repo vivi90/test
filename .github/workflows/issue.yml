@@ -25,4 +25,4 @@ jobs:
       # Assign issue
       - name: Assign issue
         run: >
-          curl --retry 3 --retry-delay 5 -u "$GITHUB_ACTOR:$API_AUTH_TOKEN_GITHUB" -H "Accept: application/vnd.github.inertia-preview+json" -X POST "$GITHUB_API_URL/projects/columns/$PROJECT_BOARD_ISSUE_COLUMN_ID/cards" -d "{\"content_type\": \"Issue\", \"content_id\": $ISSUE_ID}"
+          curl --retry 3 --retry-delay 5 -u "$GITHUB_ACTOR:$API_AUTH_TOKEN_GITHUB" -H "Accept: application/vnd.github.inertia-preview+json" -X POST "$GITHUB_API_URL/projects/columns/$PROJECT_BOARD_ISSUE_COLUMN_ID/cards" -d "{\"content_type\": \"Issue\", \"content_id\": 806890418}"
