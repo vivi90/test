@@ -59,4 +59,4 @@ jobs:
           -H "Content-Type: application/json"
           -H "X-Api-Key: $API_AUTH_TOKEN_CLOCKIFY"
           -X POST "$API_URL_CLOCKIFY/workspaces/$CLOCKIFY_WORKSPACE_ID/projects/$CLOCKIFY_PROJECT_ID/tasks"
-          -d "{\"name\": #${{env.ISSUE_ID}} ${{env.ISSUE_TITLE}}}"
+          -d "{\"name\": \"#${{env.ISSUE_ID}} ${{env.ISSUE_TITLE}}\"}"
