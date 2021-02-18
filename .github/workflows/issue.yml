@@ -1,5 +1,5 @@
 # GitHub Actions issue creation workflow
-
+# Inspired by: https://github.com/srggrs/assign-one-project-github-action
 name: New issue
 
 # Controls when the action will run.
@@ -12,14 +12,13 @@ on:
 env:
   REQUEST_RETRY_NUMBER: 3
   REQUEST_RETRY_DELAY: 5 # in seconds
-  API_URL_GITHUB: ${{env.GITHUB_API_URL}}
+  API_URL_GITHUB: ${{github.api_url}}
   API_URL_CLOCKIFY: ${{secrets.CLOCKIFY_API_URL}}
-  API_AUTH_TOKEN_GITHUB: ${{secrets.API_AUTH_TOKEN_GITHUB}}
+  API_AUTH_TOKEN_GITHUB: ${{github.token}}
   API_AUTH_TOKEN_CLOCKIFY: ${{secrets.API_AUTH_TOKEN_CLOCKIFY}}
-  API_USER_GITHUB: ${{env.GITHUB_ACTOR}}
+  API_USER_GITHUB: ${{github.actor}}
   GITHUB_PROJECT_BOARD_COLUMN_ID: ${{secrets.PROJECT_BOARD_TODO_COLUMN_ID}}
-  GITHUB_EVENT_OBJECT_PATH: ${{env.GITHUB_EVENT_PATH}}
-  GITHUB_ENVIRONMENT: ${{env.GITHUB_ENV}}
+  GITHUB_EVENT_OBJECT_PATH: ${{github.event_path}}
   CLOCKIFY_WORKSPACE_ID: ${{secrets.CLOCKIFY_WORKSPACE_ID}}
   CLOCKIFY_PROJECT_ID: ${{secrets.CLOCKIFY_PROJECT_ID}}
 
@@ -32,7 +31,7 @@ jobs:
     steps:
       # Collect required issue properties
       - name: Get issue ID
-        run: echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_OBJECT_PATH)" >> $GITHUB_ENVIRONMENT
+        run: echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_OBJECT_PATH)" >> $GITHUB_ENV
 
       # Assign issue
       - name: Assign issue to project
@@ -51,8 +50,8 @@ jobs:
       # Collect required issue properties
       - name: Get issue ID and title
         run: |
-          echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_OBJECT_PATH)" >> $GITHUB_ENVIRONMENT
-          echo "ISSUE_TITLE=$(jq -r '.issue.title' < $GITHUB_EVENT_OBJECT_PATH)" >> $GITHUB_ENVIRONMENT
+          echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_OBJECT_PATH)" >> $GITHUB_ENV
+          echo "ISSUE_TITLE=$(jq -r '.issue.title' < $GITHUB_EVENT_OBJECT_PATH)" >> $GITHUB_ENV
 
       # Create task
       - name: Create task at time tracking system
