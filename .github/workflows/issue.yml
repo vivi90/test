@@ -47,9 +47,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Collect required issue properties
-      - name: Get issue ID and title
+      - name: Get issue number and title
         run: |
-          echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+          echo "ISSUE_NUMBER=$(jq -r '.issue.number' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
           echo "ISSUE_TITLE=$(jq -r '.issue.title' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
 
       # Create task
@@ -59,4 +59,4 @@ jobs:
           -H "Content-Type: application/json"
           -H "X-Api-Key: $API_AUTH_TOKEN_CLOCKIFY"
           -X POST "$API_URL_CLOCKIFY/workspaces/$CLOCKIFY_WORKSPACE_ID/projects/$CLOCKIFY_PROJECT_ID/tasks"
-          -d "{\"name\": \"#${{env.ISSUE_ID}} ${{env.ISSUE_TITLE}}\"}"
+          -d "{\"name\": \"#${{env.ISSUE_NUMBER}} ${{env.ISSUE_TITLE}}\"}"
