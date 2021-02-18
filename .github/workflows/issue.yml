@@ -38,7 +38,7 @@ jobs:
           curl --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
           -u "$API_USER_GITHUB:$API_AUTH_TOKEN_GITHUB"
           -H "Accept: application/vnd.github.inertia-preview+json"
-          -X POST "$GITHUB_API_URL/projects/columns/$GITHUB_PROJECT_BOARD_COLUMN_ID/cards"
+          -X POST "$API_URL_GITHUB/projects/columns/$GITHUB_PROJECT_BOARD_COLUMN_ID/cards"
           -d "{\"content_type\": \"Issue\", \"content_id\": ${{env.ISSUE_ID}}}"
 
   # Time tracking system
@@ -58,5 +58,5 @@ jobs:
           curl --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
           -H "Content-Type: application/json"
           -H "X-Api-Key: $API_AUTH_TOKEN_CLOCKIFY"
-          -X POST "$CLOCKIFY_API_URL/workspaces/$CLOCKIFY_WORKSPACE_ID/projects/$CLOCKIFY_PROJECT_ID/tasks"
+          -X POST "$API_URL_CLOCKIFY/workspaces/$CLOCKIFY_WORKSPACE_ID/projects/$CLOCKIFY_PROJECT_ID/tasks"
           -d "{\"name\": #${{env.ISSUE_ID}} ${{env.ISSUE_TITLE}}}"
