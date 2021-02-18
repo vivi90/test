@@ -1,12 +1,15 @@
 # GitHub Actions issue creation workflow
+#
 # Inspired by: https://github.com/srggrs/assign-one-project-github-action
+# Created: 2021 by Vivien Richter <vivien-richter@outlook.de>
+# License: CC BY 4.0
 name: New issue
 
 # Controls when the action will run.
 on:
   # Triggers the workflow on issue creation events
   issues:
-    types: [opened]
+    types: [opened, reopened]
 
 # Sets environment variables
 env:
@@ -28,11 +31,11 @@ jobs:
     name: Assign issue to project board
     runs-on: ubuntu-latest
     steps:
-      # Collect required issue properties
+      # Collects required issue properties
       - name: Get issue ID
         run: echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
 
-      # Assign issue
+      # Assigns issue
       - name: Assign issue to project
         run: >
           curl --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
@@ -46,13 +49,13 @@ jobs:
     name: Create task at time tracking system
     runs-on: ubuntu-latest
     steps:
-      # Collect required issue properties
+      # Collects required issue properties
       - name: Get issue number and title
         run: |
           echo "ISSUE_NUMBER=$(jq -r '.issue.number' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
           echo "ISSUE_TITLE=$(jq -r '.issue.title' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
 
-      # Create task
+      # Creates task
       - name: Create task at time tracking system
         run: >
           curl --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
