@@ -12,7 +12,16 @@ on:
 env:
   REQUEST_RETRY_NUMBER: 3
   REQUEST_RETRY_DELAY: 5 # in seconds
-  CLOCKIFY_API_URL: https://api.clockify.me/api/v1
+  API_URL_GITHUB: ${{env.GITHUB_API_URL}}
+  API_URL_CLOCKIFY: ${{secrets.CLOCKIFY_API_URL}}
+  API_AUTH_TOKEN_GITHUB: ${{secrets.API_AUTH_TOKEN_GITHUB}}
+  API_AUTH_TOKEN_CLOCKIFY: ${{secrets.API_AUTH_TOKEN_CLOCKIFY}}
+  API_USER_GITHUB: ${{env.GITHUB_ACTOR}}
+  GITHUB_PROJECT_BOARD_COLUMN_ID: ${{secrets.PROJECT_BOARD_TODO_COLUMN_ID}}
+  GITHUB_EVENT_OBJECT_PATH: ${{env.GITHUB_EVENT_PATH}}
+  GITHUB_ENVIRONMENT: ${{env.GITHUB_ENV}}
+  CLOCKIFY_WORKSPACE_ID: ${{secrets.CLOCKIFY_WORKSPACE_ID}}
+  CLOCKIFY_PROJECT_ID: ${{secrets.CLOCKIFY_PROJECT_ID}}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -23,15 +32,15 @@ jobs:
     steps:
       # Collect required issue properties
       - name: Get issue ID
-        run: echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+        run: echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_OBJECT_PATH)" >> $GITHUB_ENVIRONMENT
 
       # Assign issue
-      - name: Assign issue
+      - name: Assign issue to project
         run: >
           curl --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
-          -u "$GITHUB_ACTOR:${{secrets.API_AUTH_TOKEN_GITHUB}}"
+          -u "$API_USER_GITHUB:$API_AUTH_TOKEN_GITHUB"
           -H "Accept: application/vnd.github.inertia-preview+json"
-          -X POST "$GITHUB_API_URL/projects/columns/${{secrets.PROJECT_BOARD_TODO_COLUMN_ID}}/cards"
+          -X POST "$GITHUB_API_URL/projects/columns/$GITHUB_PROJECT_BOARD_COLUMN_ID/cards"
           -d "{\"content_type\": \"Issue\", \"content_id\": ${{env.ISSUE_ID}}}"
 
   # Time tracking system
@@ -42,13 +51,14 @@ jobs:
       # Collect required issue properties
       - name: Get issue ID and title
         run: |
-          echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
-          echo "ISSUE_TITLE=$(jq -r '.issue.title' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+          echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_OBJECT_PATH)" >> $GITHUB_ENVIRONMENT
+          echo "ISSUE_TITLE=$(jq -r '.issue.title' < $GITHUB_EVENT_OBJECT_PATH)" >> $GITHUB_ENVIRONMENT
 
       # Create task
-      - name: Create task
+      - name: Create task at time tracking system
         run: >
           curl --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
           -H "Content-Type: application/json"
-          -H "X-Api-Key: ${{secrets.API_AUTH_TOKEN_CLOCKIFY}}"
-          -X GET "$CLOCKIFY_API_URL/user"
+          -H "X-Api-Key: $API_AUTH_TOKEN_CLOCKIFY"
+          -X POST "$CLOCKIFY_API_URL/workspaces/$CLOCKIFY_WORKSPACE_ID/projects/$CLOCKIFY_PROJECT_ID/tasks"
+          -d "{\"name\": #${{env.ISSUE_ID}} ${{env.ISSUE_TITLE}}}"
