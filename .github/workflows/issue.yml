@@ -16,23 +16,15 @@ env:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # Issue properties
-  collect_issue_properties:
-    name: Collect issue properties
-    runs-on: ubuntu-latest
-    steps:
-      # Collect required properties
-      - name: Collect properties
-        run: |
-          echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
-          echo "ISSUE_TITLE=$(jq -r '.issue.title' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
-
   # Project board
   assign_project:
     name: Assign issue to project board
     runs-on: ubuntu-latest
-    needs: collect_issue_properties
     steps:
+      # Collect required issue properties
+      - name: Get issue ID
+        run: echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+
       # Assign issue
       - name: Assign issue
         run: >
@@ -46,8 +38,13 @@ jobs:
   create_task:
     name: Create task at time tracking system
     runs-on: ubuntu-latest
-    needs: collect_issue_properties
     steps:
+      # Collect required issue properties
+      - name: Get issue ID and title
+        run: |
+          echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+          echo "ISSUE_TITLE=$(jq -r '.issue.title' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+
       # Create task
       - name: Create task
         run: >
