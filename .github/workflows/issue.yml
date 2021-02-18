@@ -8,23 +8,50 @@ on:
   issues:
     types: [opened]
 
+# Sets environment variables
+env:
+  REQUEST_RETRY_NUMBER: 3
+  REQUEST_RETRY_DELAY: 5 # in seconds
+  CLOCKIFY_API_URL: https://api.clockify.me/api/v1
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  # Issue properties
+  collect_issue_properties:
+    name: Collect issue properties
+    runs-on: ubuntu-latest
+    steps:
+      # Collect required properties
+      - name: Collect properties
+        run: |
+          echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+          echo "ISSUE_TITLE=$(jq -r '.issue.title' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+
   # Project board
   assign_project:
     name: Assign issue to project board
     runs-on: ubuntu-latest
+    needs: collect_issue_properties
     steps:
-      # Collect required issue properties
-      - name: Collect issue properties
-        run: |
-          echo "ISSUE_ID=$(jq -r '.issue.id' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
-          echo "ISSUE_TITLE=$(jq -r '.issue.title' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
       # Assign issue
       - name: Assign issue
         run: >
-          curl --retry 3 --retry-delay 5
+          curl --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
           -u "$GITHUB_ACTOR:${{secrets.API_AUTH_TOKEN_GITHUB}}"
           -H "Accept: application/vnd.github.inertia-preview+json"
           -X POST "$GITHUB_API_URL/projects/columns/${{secrets.PROJECT_BOARD_TODO_COLUMN_ID}}/cards"
           -d "{\"content_type\": \"Issue\", \"content_id\": ${{env.ISSUE_ID}}}"
+
+  # Time tracking system
+  create_task:
+    name: Create task at time tracking system
+    runs-on: ubuntu-latest
+    needs: collect_issue_properties
+    steps:
+      # Create task
+      - name: Create task
+        run: >
+          curl --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
+          -H "Content-Type: application/json"
+          -H "X-Api-Key: ${{secrets.API_AUTH_TOKEN_CLOCKIFY}}"
+          -X GET "$CLOCKIFY_API_URL/user"
