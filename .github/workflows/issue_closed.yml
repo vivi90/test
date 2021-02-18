@@ -27,9 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Collects required issue properties
-      - name: Get issue number
+      - name: Get issue number and title
         run: |
           echo "ISSUE_NUMBER=$(jq -r '.issue.number' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
+          echo "ISSUE_TITLE=$(jq -r '.issue.title' < $GITHUB_EVENT_PATH)" >> $GITHUB_ENV
 
       # Gets task ID
       - name: Get task ID
@@ -47,4 +48,4 @@ jobs:
           -H "Content-Type: application/json"
           -H "X-Api-Key: $API_AUTH_TOKEN_CLOCKIFY"
           -X PUT "$API_URL_CLOCKIFY/workspaces/$CLOCKIFY_WORKSPACE_ID/projects/$CLOCKIFY_PROJECT_ID/tasks/${{env.TASK_ID}}"
-          -d "{\"status\": \"DONE\"}"
+          -d "{\"name\": \"#${{env.ISSUE_NUMBER}} ${{env.ISSUE_TITLE}}\", \"status\": \"DONE\"}"
