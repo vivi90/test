@@ -9,7 +9,7 @@ name: New issue
 on:
   # Triggers the workflow on issue creation events
   issues:
-    types: [opened, reopened]
+    types: [opened]
 
 # Sets environment variables
 env:
@@ -38,7 +38,7 @@ jobs:
       # Assigns issue
       - name: Assign issue to project
         run: >
-          curl --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
+          curl -s --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
           -u "$API_USER_GITHUB:$API_AUTH_TOKEN_GITHUB"
           -H "Accept: application/vnd.github.inertia-preview+json"
           -X POST "$API_URL_GITHUB/projects/columns/$GITHUB_PROJECT_BOARD_COLUMN_ID/cards"
@@ -58,7 +58,7 @@ jobs:
       # Creates task
       - name: Create task at time tracking system
         run: >
-          curl --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
+          curl -s --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
           -H "Content-Type: application/json"
           -H "X-Api-Key: $API_AUTH_TOKEN_CLOCKIFY"
           -X POST "$API_URL_CLOCKIFY/workspaces/$CLOCKIFY_WORKSPACE_ID/projects/$CLOCKIFY_PROJECT_ID/tasks"
