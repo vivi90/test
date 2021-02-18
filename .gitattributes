@@ -1,0 +1,147 @@
+# Modified from:
+# https://hextantstudios.com/unity-gitattributes
+
+# Macro for Unity YAML-based asset files.
+[attr]unityyaml -text merge=unityyamlmerge diff
+
+# Macro for all binary files that should use Git LFS.
+[attr]lfs -text filter=lfs diff=lfs merge=lfs lockable
+
+# Default to auto-normalized line endings.
+* text=auto
+
+# Code
+*.[cC][sS] text diff=csharp
+
+# Unity Text Assets
+*.meta unityyaml
+*.unity unityyaml
+*.asset unityyaml
+*.prefab unityyaml
+*.mat unityyaml
+*.anim unityyaml
+*.controller unityyaml
+*.overrideController unityyaml
+*.physicMaterial unityyaml
+*.physicsMaterial2D unityyaml
+*.playable unityyaml
+*.mask unityyaml
+*.brush unityyaml
+*.flare unityyaml
+*.fontsettings unityyaml
+*.guiskin unityyaml
+*.giparams unityyaml
+*.renderTexture unityyaml
+*.spriteatlas unityyaml
+*.terrainlayer unityyaml
+*.mixer unityyaml
+*.shadervariants unityyaml
+*.preset unityyaml
+*.asmdef -text diff
+
+# Unity Binary Assets
+*.cubemap lfs
+*.unitypackage lfs
+# Note: Unity terrain assets must have "Terrain" suffix.
+*Terrain.asset -unityyaml lfs
+# Note: Unity navmesh assets must have "NavMesh" suffix.
+*NavMesh.asset -unityyaml lfs
+
+# Image
+*.[jJ][pP][gG] lfs
+*.[jJ][pP][eE][gG] lfs
+*.[pP][nN][gG] lfs
+*.[aA][pP][nN][gG] lfs
+*.[aA][tT][sS][cC] lfs
+*.[gG][iI][fF] lfs
+*.[bB][mM][pP] lfs
+*.[eE][xX][rR] lfs
+*.[tT][gG][aA] lfs
+*.[tT][iI][fF] lfs
+*.[tT][iI][fF][fF] lfs
+*.[iI][fF][fF] lfs
+*.[p][iI][cC][tT] lfs
+*.[dD][dD][sS] lfs
+*.[xX][cC][fF] lfs
+*.[lL][eE][oO] lfs
+*.[kK][rR][aA] lfs
+*.[kK][pP][pP] lfs
+*.[cC][lL][iI][pP] lfs
+*.[wW][eE][bB][mM] lfs
+*.[wW][eE][bB][pP] lfs
+*.[sS][vV][gG] lfs
+*.[sS][vV][gG][zZ] lfs
+*.[pP][sS][dD] lfs
+*.[aA][fF][pP][hH][oO][tT][oO] lfs
+*.[aA][fF][dD][eE][sS][iI][gG][nN] lfs
+
+# Audio
+*.[mM][pP]3 lfs
+*.[oO][gG][gG] lfs
+*.[wW][aA][vV] lfs
+*.[aA][iI][fF] lfs
+*.[aA][iI][fF][fF] lfs
+*.[mM][oO][dD] lfs
+*.[iI][tT] lfs
+*.[sS]3[mM] lfs
+*.[xX][mM] lfs
+
+# Video
+*.[mM][oO][vV] lfs
+*.[aA][vV][iI] lfs
+*.[aA][sS][fF] lfs
+*.[mM][pP][gG] lfs
+*.[mM][pP][eE][gG] lfs
+*.[mM][pP]4 lfs
+*.[fF][lL][vV] lfs
+*.[oO][gG][vV] lfs
+*.[wW][mM][vV] lfs
+
+# 3D
+*.[fF][bB][xX] lfs
+*.[oO][bB][jJ] lfs
+*.[mM][aA][xX] lfs
+*.[bB][lL][eE][nN][dD] lfs
+*.[bB][lL][eE][nN][dD][eE][rR] lfs
+*.[dD][aA][eE] lfs
+*.[mM][aA] lfs
+*.[mM][bB] lfs
+*.3[dD][sS] lfs
+*.[dD][fF][xX] lfs
+*.[cC]4[dD] lfs
+*.[lL][wW][oO] lfs
+*.[lL][wW][oO]2 lfs
+*.[aA][bB][cC] lfs
+*.3[dD][mM] lfs
+*.[bB][iI][nN] lfs
+*.[gG][lL][bB] lfs
+
+# Fonts
+*.[oO][tT][fF] lfs
+*.[tT][tT][fF] lfs
+
+# Executables
+*.[dD][lL][lL] lfs
+*.[sS][oO] lfs
+*.[pP][dD][bB] lfs
+*.[mM][dD][bB] lfs
+
+# Debug symbols
+*.debug
+
+# Packaging
+*.[bB][zZ]2 lfs
+*.[xX][zZ] lfs
+*.[zZ][iI][pP] lfs
+*.7[zZ] lfs
+*.[gG][zZ] lfs
+*.[rR][aA][rR] lfs
+*.[tT][aA][rR] lfs
+
+# Collapse Unity-generated files on GitHub
+# Source: https://thoughtbot.com/blog/how-to-git-with-unity
+*.asset linguist-generated
+*.mat linguist-generated
+*.meta linguist-generated
+*.prefab linguist-generated
+*.unity linguist-generated
