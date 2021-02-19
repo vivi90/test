@@ -3,7 +3,7 @@
 # Modified from: https://game.ci/docs/github/activation
 # Modified: 2021 by Vivien Richter <vivien-richter@outlook.de>
 # License: CC BY 4.0
-name: Acquire Unity activation file
+name: Acquire Unity activation file 🔑
 
 # Controls when the action will run.
 on:
@@ -17,7 +17,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   activation_file:
-    name: Request manual activation file 🔑
+    name: Request manual activation file
     runs-on: ubuntu-latest
     steps:
       # Request manual activation file
