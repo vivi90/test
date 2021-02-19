@@ -3,7 +3,7 @@
 # Inspired by: https://github.com/srggrs/assign-one-project-github-action
 # Created: 2021 by Vivien Richter <vivien-richter@outlook.de>
 # License: CC BY 4.0
-name: New issue
+name: New issue ✨
 
 # Controls when the action will run.
 on:
