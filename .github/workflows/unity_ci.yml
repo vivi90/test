@@ -86,7 +86,7 @@ jobs:
 
       # Stores the builds
       - name: Store project build
-      - uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v2
         with:
           name: Builds
           path: Builds
