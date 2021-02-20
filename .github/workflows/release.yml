@@ -7,17 +7,29 @@ name: Release
 
 # Controls when the action will run.
 on:
+  # Triggers the workflow on workflow_run events but only for the same branch and if completed.
+  workflow_run:
+    workflows:
+      - Build
+    types:
+      - completed
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+
+# Sets environment variables
+env:
+  # This token is provided by Actions, you do not need to create your own token
+  GITHUB_TOKEN: ${{github.token}}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   release:
-    name: Release
+    name: Release 🎉
     runs-on: ubuntu-latest
     steps:
-      # Loads files
-      - name: Load workflow artifact
+      # Loads build workflow artifacts
+      - name: Load build artifacts
         uses: dawidd6/action-download-artifact@v2.11.1
         with:
           workflow: unity_ci.yml
@@ -28,3 +40,6 @@ jobs:
       # Shows loaded files
       - name: Display structure of downloaded files
         run: ls -R Builds
+
+      # Creates release
+      
