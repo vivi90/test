@@ -34,11 +34,11 @@ jobs:
       # Checks CI result
       - name: Check CI result
         run: >
-          echo "RUN_CONCLUSION=$(curl -s --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
+          RUN_CONCLUSION=$(curl -s --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
           -H "Accept: application/vnd.github.v3+json"
           -X GET "$API_URL_GITHUB/repos/vivi90/test/actions/workflows/unity_ci.yml/runs"
           -d "{\"content_type\": \"Issue\", \"content_id\": ${{env.ISSUE_ID}}}"
-          | jq -r '.workflow_runs[0].conclusion')"
+          | jq -r '.workflow_runs[0].conclusion')
 
           if [ "$RUN_CONCLUSION" != "success" ]; then
             exit 1;
