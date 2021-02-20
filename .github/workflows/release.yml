@@ -37,6 +37,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      -name: Tag
+       run: echo "${{ toJson(github) }}"
+
       # Checks last CI result
       - name: Check last CI result
         run: >
@@ -65,6 +68,5 @@ jobs:
       - name: Display structure of downloaded files
         run: |
           ls -R Builds
-          echo "${{ toJson(github) }}"
 
       # Creates release
