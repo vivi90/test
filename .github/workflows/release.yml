@@ -19,6 +19,9 @@ on:
 
 # Sets environment variables
 env:
+  REQUEST_RETRY_NUMBER: 3
+  REQUEST_RETRY_DELAY: 5 # in seconds
+  API_URL_GITHUB: ${{github.api_url}}
   # This token is provided by Actions, you do not need to create your own token
   GITHUB_TOKEN: ${{github.token}}
 
@@ -28,6 +31,19 @@ jobs:
     name: Release 🎉
     runs-on: ubuntu-latest
     steps:
+      # Checks CI result
+      - name: Check CI result
+        run: >
+          echo "RUN_CONCLUSION=$(curl -s --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
+          -H "Accept: application/vnd.github.v3+json"
+          -X GET "$API_URL_GITHUB/repos/vivi90/test/actions/workflows/unity_ci.yml/runs"
+          -d "{\"content_type\": \"Issue\", \"content_id\": ${{env.ISSUE_ID}}}"
+          | jq -r '.workflow_runs[0].conclusion')"
+
+          if [ "$RUN_CONCLUSION" != "success" ]; then
+            exit 1;
+          fi
+
       # Loads build workflow artifacts
       - name: Load build artifacts
         uses: dawidd6/action-download-artifact@v2.11.1
@@ -42,4 +58,3 @@ jobs:
         run: ls -R Builds
 
       # Creates release
-      
