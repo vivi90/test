@@ -1,4 +1,7 @@
 # Test
+[![Build status](https://github.com/vivi90/test/actions/workflows/unity_ci.yml/badge.svg)](https://github.com/vivi90/test/actions/workflows/unity_ci.yml)
+
+## About
 Just an test repository
 
 ## Requirements
