@@ -1,8 +1,6 @@
-# GitHub Actions Unity CI workflow
+# GitHub Actions release workflow
 #
 # Created: 2021 by Vivien Richter <vivien-richter@outlook.de>
-# Based on: https://game.ci/docs/github/getting-started#simple-example
-# Special thanks to: https://github.com/mob-sakai
 #
 # License: CC BY 4.0
 name: Release
@@ -18,18 +16,14 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      # Checks the repository out
-      - name: Checkout repository
-        uses: actions/checkout@v2.3.4
-        with:
-          lfs: false
-
       # Loads files
-      - name: Load files
-        uses: actions/download-artifact@v2
+      - name: Load workflow artifact
+        uses: dawidd6/action-download-artifact@v2.11.1
         with:
-          name: Build
+          workflow: unity_ci.yml
+          workflow_conclusion: success
+          name: Builds
 
       # Shows loaded files
       - name: Display structure of downloaded files
-        run: ls -R
+        run: ls -R Builds
