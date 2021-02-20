@@ -5,7 +5,7 @@
 # Special thanks to: https://github.com/mob-sakai
 #
 # License: CC BY 4.0
-name: Test and build Unity project 🧪
+name: Build
 
 # Controls when the action will run.
 on:
@@ -21,7 +21,7 @@ env:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    name: Build my project
+    name: Test and build Unity project 🧪
     runs-on: ubuntu-latest
     steps:
 
