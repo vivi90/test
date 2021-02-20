@@ -65,6 +65,7 @@ jobs:
           echo -n "Disk space before:"
           df -h / --output=avail | tail -1
           # Required to keep a clean workspace before build, see: https://github.com/game-ci/unity-test-runner/issues/58
+          sudo chown -R $USER:$USER TestResults
           rm -rf TestResults
           # https://github.com/apache/flink/blob/master/tools/azure-pipelines/free_disk_space.sh
           rm -rf /usr/share/dotnet/
