@@ -31,14 +31,16 @@ jobs:
     name: Release 🎉
     runs-on: ubuntu-latest
     steps:
-      # Checks CI result
-      - name: Check CI result
+      # Checks last CI result
+      - name: Check last CI result
         run: >
           RUN_CONCLUSION=$(curl -s --retry "$REQUEST_RETRY_NUMBER" --retry-delay "$REQUEST_RETRY_DELAY"
           -H "Accept: application/vnd.github.v3+json"
           -X GET "$API_URL_GITHUB/repos/vivi90/test/actions/workflows/unity_ci.yml/runs"
           -d "{\"content_type\": \"Issue\", \"content_id\": ${{env.ISSUE_ID}}}"
           | jq -r '.workflow_runs[0].conclusion')
+
+          echo "Last CI run conclusion: $RUN_CONCLUSION"
 
           if [ "$RUN_CONCLUSION" != "success" ]; then
             exit 1;
