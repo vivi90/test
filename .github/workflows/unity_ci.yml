@@ -74,7 +74,8 @@ jobs:
           buildsPath: Builds
           buildName: ${{env.PROJECT_NAME}}
           targetPlatform: Android
-          allowDirtyBuild: true
+          versioning: Semantic
+          allowDirtyBuild: false
 
       # Stores Unity logs
       - name: Store logs
