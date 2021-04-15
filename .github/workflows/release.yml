@@ -41,8 +41,15 @@ jobs:
           echo "TAG_SUBJECT=$(git tag -l --format='%(contents:subject)' ${{env.TAG_NAME}})" >> $GITHUB_ENV
           echo "TAG_BODY=$(git tag -l --format='%(contents:body)' ${{env.TAG_NAME}})" >> $GITHUB_ENV
 
+      # Load the compiled PDF
+      - name: Load PDF
+        uses: actions/download-artifact@v2
+        with:
+          name: Documentation
+
       # Publish the release
       - name: Publish release
+        id: publish_release
         uses: actions/create-release@v1
         with:
           tag_name: ${{github.ref}}
@@ -50,3 +57,12 @@ jobs:
           body: ${{env.TAG_BODY}}
           draft: false
           prerelease: false
+
+      # Publish the compiled PDF
+      - name: Publish PDF
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{steps.publish_release.outputs.upload_url}}
+          asset_path: doc.pdf
+          asset_name: doc.pdf
+          asset_content_type: application/pdf
