@@ -37,15 +37,15 @@ jobs:
       # Get the release title and description by the tag message title
       - name: Get release details
         run: |
-          echo "RELEASE_TITLE=$(git tag -l --format='%(contents:subject)' ${{env.TAG_NAME}})" >> $GITHUB_ENV
-          echo "RELEASE_DESCRIPTION=$(git tag -l --format='%(contents:body)'  ${{env.TAG_NAME}})" >> $GITHUB_ENV
+          echo "TAG_SUBJECT=$(git tag -l --format='%(contents:subject)' ${{env.TAG_NAME}})" >> $GITHUB_ENV
+          echo "TAG_BODY=$(git tag -l --format='%(contents:body)' ${{env.TAG_NAME}})" >> $GITHUB_ENV
 
       # Publish the release
       - name: Publish release
         uses: actions/create-release@v1
         with:
           tag_name: ${{github.ref}}
-          release_name: ${{env.RELEASE_TITLE}}
-          body: ${{env.RELEASE_DESCRIPTION}}
+          release_name: ${{env.TAG_SUBJECT}}
+          body: ${{env.TAG_BODY}}
           draft: false
           prerelease: false
