@@ -37,8 +37,8 @@ jobs:
       # Get the release title and description by the tag message title
       - name: Get release details
         run: |
-          echo "TAG_SUBJECT=$(git tag -l --format='%(contents:subject)' ${{env.TAG_NAME}})" >> $GITHUB_ENV
-          echo "TAG_BODY=$(git tag -l --format='%(contents:body)' ${{env.TAG_NAME}})" >> $GITHUB_ENV
+          git tag -l --format='%(contents:subject)' ${{env.TAG_NAME}}
+          git tag -l --format='%(contents:body)' ${{env.TAG_NAME}}
 
       # Publish the release
       - name: Publish release
