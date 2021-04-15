@@ -33,7 +33,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           lfs: true
-          fetch-depth: 0
+          ref: ${{ github.ref }}
 
       # Get the release title and description by the tag message title
       - name: Get release details
