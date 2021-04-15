@@ -14,12 +14,25 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# Sets environment variables
+env:
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
 
-      # Tag read
-      - name: tag read
-        run: echo git tag -l --format='%(contents:subject)' ${GITHUB_REF#refs/*/}
+      # Get the release name by the tag message title
+      - name: Get release name
+        run: echo "RELEASE_NAME=$(git tag -l --format='%(contents:subject)' ${{github.ref}})" >> $GITHUB_ENV
+
+      # Publish the release
+      - name: Publish release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{github.ref}}
+          release_name: Release ${{env.RELEASE_NAME}}
+          draft: false
+          prerelease: false
