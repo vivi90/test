@@ -24,15 +24,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      # Get the tag name
+      - name: Get tag name
+        run: echo "TAG_NAME=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
       # Check the repository out
       - name: Repository checkout
         uses: actions/checkout@v2
         with:
           lfs: true
-
-      # Get the tag name
-      - name: Get tag name
-        run: echo "TAG_NAME=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       # Get the release title and description by the tag message title
       - name: Get release details
