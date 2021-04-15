@@ -27,6 +27,9 @@ jobs:
       # Get the release name by the tag message title
       - name: Get release name
         run: echo "RELEASE_NAME=$(git tag -l --format='%(contents:subject)' ${{github.ref}})" >> $GITHUB_ENV
+        
+      - name: test
+        run: echo ${{github.ref}})
 
       # Publish the release
       - name: Publish release
