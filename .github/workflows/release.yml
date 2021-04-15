@@ -67,5 +67,5 @@ jobs:
         with:
           upload_url: ${{steps.publish_release.outputs.upload_url}}
           asset_path: Documentation/doc.pdf
-          asset_name: Documentation.pdf
+          asset_name: Dokumentation.pdf
           asset_content_type: application/pdf
