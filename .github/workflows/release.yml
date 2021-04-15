@@ -30,11 +30,15 @@ jobs:
         with:
           lfs: true
 
+      # Get the tag name
+      - name: Get tag name
+        run: echo "TAG_NAME=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
       # Get the release title and description by the tag message title
       - name: Get release details
         run: |
-          echo "RELEASE_TITLE=$(git tag -l --format='%(contents:subject)' ${GITHUB_REF#refs/*/})" >> $GITHUB_ENV
-          echo "RELEASE_DESCRIPTION=$(git tag -l --format='%(contents:body)' ${GITHUB_REF#refs/*/})" >> $GITHUB_ENV
+          echo "RELEASE_TITLE=$(git tag -l --format='%(contents:subject)' ${{env.TAG_NAME}})" >> $GITHUB_ENV
+          echo "RELEASE_DESCRIPTION=$(git tag -l --format='%(contents:body)'  ${{env.TAG_NAME}})" >> $GITHUB_ENV
 
       # Publish the release
       - name: Publish release
