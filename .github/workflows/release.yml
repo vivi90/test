@@ -22,4 +22,4 @@ jobs:
 
       # Tag read
       - name: tag read
-        run: echo "${{ toJson(github) }}"
+        run: echo git tag -l --format='%(contents:subject)' ${GITHUB_REF#refs/*/}
