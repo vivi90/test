@@ -48,6 +48,7 @@ jobs:
           workflow: build.yml
           workflow_conclusion: success
           name: Documentation
+          path: Documentation
 
       # Publish the release
       - name: Publish release
