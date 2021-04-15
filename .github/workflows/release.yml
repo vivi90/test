@@ -24,18 +24,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      # Get the release name by the tag message title
-      - name: Get release name
-        run: echo "RELEASE_NAME=$(git tag -l --format='%(contents:subject)' ${{github.ref}})" >> $GITHUB_ENV
-        
-      - name: test
-        run: echo ${{github.ref}})
+      # Check the repository out
+      - name: Repository checkout
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      # Get the release title and description by the tag message title
+      - name: Get release details
+        run: |
+          echo "RELEASE_TITLE=$(git tag -l --format='%(contents:subject)' ${{github.ref}})" >> $GITHUB_ENV
+          echo "RELEASE_DESCRIPTION=$(git tag -l --format='%(contents:body)' ${{github.ref}})" >> $GITHUB_ENV
 
       # Publish the release
       - name: Publish release
         uses: actions/create-release@v1
         with:
           tag_name: ${{github.ref}}
-          release_name: Release ${{env.RELEASE_NAME}}
+          release_name: ${{env.RELEASE_TITLE}}
+          body: ${{env.RELEASE_DESCRIPTION}}
           draft: false
           prerelease: false
